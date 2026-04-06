@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vynor - Premium Menswear Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-banner {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #000;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Hero Slider */
+        .hero-slider {
+            position: relative;
+            height: 600px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: absolute;
+            left: 80px;
+            color: #fff;
+            max-width: 500px;
+            z-index: 2;
+        }
+
+        .hero-content .badge {
+            background: #ef4444;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .hero-content .price {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hero-content .original-price {
+            font-size: 20px;
+            text-decoration: line-through;
+            opacity: 0.7;
+            margin-left: 12px;
+        }
+
+        .hero-content .savings {
+            color: #4ade80;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 3;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .slider-dot.active {
+            background: #fff;
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 3;
+            transition: all 0.3s;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .slider-arrow.prev {
+            left: 20px;
+        }
+
+        .slider-arrow.next {
+            right: 20px;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            background: #000;
+            color: #fff;
+            padding: 40px 24px;
+        }
+
+        .trust-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .trust-item {
+            padding: 20px;
+        }
+
+        .trust-item .icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .trust-item h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .trust-item p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        /* Section Styles */
+        .section {
+            max-width: 1400px;
+            margin: 80px auto;
+            padding: 0 24px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: #666;
+            font-size: 18px;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .category-card {
+            position: relative;
+            height: 350px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 32px 24px;
+            color: #fff;
+        }
+
+        .category-overlay h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .category-overlay p {
+            font-size: 14px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .category-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            position: relative;
+            padding-top: 125%;
+            overflow: hidden;
+            background: #f9f9f9;
+        }
+
+        .product-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #ef4444;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .flash-deal-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #000;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-brand {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .current-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .original-price {
+            font-size: 16px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .discount-text {
+            color: #16a34a;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Product Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f3f4f6;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: #e5e7eb;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #000;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .product-images {
+            position: sticky;
+            top: 100px;
+        }
+
+        .main-image {
+            position: relative;
+            padding-top: 125%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f9f9f9;
+            margin-bottom: 16px;
+        }
+
+        .main-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .thumbnail {
+            padding-top: 100%;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s;
+        }
+
+        .thumbnail:hover {
+            border-color: #000;
+        }
+
+        .thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 20px 0;
+        }
+
+        .detail-brand {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .detail-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .detail-description {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .detail-price {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .detail-current-price {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .detail-original-price {
+            font-size: 24px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .detail-discount {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .size-selector {
+            margin-bottom: 32px;
+        }
+
+        .size-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .size-header label {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .size-guide {
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .size-guide:hover {
+            color: #000;
+        }
+
+        .size-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .size-btn {
+            padding: 12px 24px;
+            border: 2px solid #d1d5db;
+            background: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .size-btn:hover {
+            border-color: #000;
+        }
+
+        .size-btn.selected {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .quantity-selector {
+            margin-bottom: 32px;
+        }
+
+        .quantity-selector label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #d1d5db;
+            background: #fff;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            border-color: #000;
+        }
+
+        .qty-display {
+            font-size: 20px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+            color: #fff;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background: #20ba5a;
+        }
+
+        .secondary-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .secondary-btn {
+            padding: 12px 24px;
+            border: 2px solid #d1d5db;
+            background: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .secondary-btn:hover {
+            border-color: #000;
+        }
+
+        .features-list {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .feature-item .icon {
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .feature-item h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .feature-item p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product-info-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 40px;
+        }
+
+        .info-section {
+            margin-bottom: 32px;
+        }
+
+        .info-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .info-section p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .info-section ul {
+            list-style: none;
+        }
+
+        .info-section li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        .check-icon {
+            color: #16a34a;
+            font-weight: 700;
+        }
+
+        .material-care {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .care-section h4 {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .care-section p,
+        .care-section ul {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .care-section ul {
+            list-style: none;
+        }
+
+        .care-section li {
+            margin-bottom: 4px;
+        }
+
+        /* Flash Deal Popup */
+        .flash-deal-popup {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #ef4444;
+            color: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            z-index: 1500;
+            max-width: 320px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .flash-deal-popup .emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .flash-deal-popup h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .flash-deal-popup p {
+            font-size: 14px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .popup-btn {
+            background: #fff;
+            color: #ef4444;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: #fff;
+            padding: 60px 24px 24px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid #374151;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            border: 2px solid #e5e7eb;
+            background: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            border-color: #000;
+        }
+
+        .filter-btn.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-slider {
+                height: 400px;
+            }
+
+            .hero-content {
+                left: 24px;
+                right: 24px;
+            }
+
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .modal-body {
+                padding: 24px;
+            }
+
+            .material-care {
+                grid-template-columns: 1fr;
+            }
+
+            .flash-deal-popup {
+                left: 24px;
+                right: 24px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="top-banner">
+            Free Shipping On All Prepaid Orders | 3 Days easy replacement available
+        </div>
+        <nav class="nav-container">
+            <a href="#" class="logo" onclick="showHome(); return false;">Vynor</a>
+            <div class="nav-links">
+                <a href="#" onclick="filterByCategory('all'); return false;">Category</a>
+                <a href="#shipping">Shipping Policy</a>
+                <a href="#payment">Payment Policy</a>
+                <a href="#return">Return & Refund Policy</a>
+                <a href="#about">About Us</a>
+                <a href="https://instagram.com" target="_blank">Follow Vynor on Instagram !!</a>
+            </div>
+            <div class="nav-icons">
+                <button class="icon-btn">🔍</button>
+                <button class="icon-btn">👤</button>
+                <button class="icon-btn">🛒</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Slider -->
+        <section class="hero-slider" id="heroSlider">
+            <!-- Slides will be generated by JS -->
+        </section>
+
+        <!-- Trust Badges -->
+        <section class="trust-badges">
+            <div class="trust-container">
+                <div class="trust-item">
+                    <div class="icon">🚚</div>
+                    <h3>Free Delivery</h3>
+                    <p>On all prepaid orders</p>
+                </div>
+                <div class="trust-item">
+                    <div class="icon">🔄</div>
+                    <h3>Easy Returns</h3>
+                    <p>3 days return policy</p>
+                </div>
+                <div class="trust-item">
+                    <div class="icon">⭐</div>
+                    <h3>1000+ Happy Customers</h3>
+                    <p>Trusted by thousands</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Shop by Category</h2>
+                <p>Explore our curated collections designed for every occasion</p>
+            </div>
+            <div class="category-grid" id="categoryGrid">
+                <!-- Categories will be generated by JS -->
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Featured Products</h2>
+                <p>Handpicked collection of our best sellers</p>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filter-section">
+                <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+                <button class="filter-btn" onclick="filterByCategory('Formal')">Formal Wear</button>
+                <button class="filter-btn" onclick="filterByCategory('Casual')">Casual Wear</button>
+                <button class="filter-btn" onclick="filterByCategory('Winter')">Winter Collection</button>
+                <button class="filter-btn" onclick="filterByCategory('Ethnic')">Ethnic Wear</button>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <!-- Products will be generated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductModal()">×</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Product details will be generated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Deal Popup -->
+    <div class="flash-deal-popup" id="flashDealPopup" style="display: none;">
+        <button class="popup-close" onclick="closeFlashDeal()">×</button>
+        <div class="emoji">🎁</div>
+        <h3>Flash Deal: 30% OFF!</h3>
+        <p>Expires soon</p>
+        <button class="popup-btn" onclick="scrollToProducts()">Grab Deal</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Vynor</h3>
+                <p style="color: #d1d5db; font-size: 14px;">Premium menswear collection designed for the modern gentleman. Quality, style, and comfort in every piece.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#return">Return Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#" onclick="filterByCategory('Formal'); return false;">Formal Wear</a></li>
+                    <li><a href="#" onclick="filterByCategory('Casual'); return false;">Casual Wear</a></li>
+                    <li><a href="#" onclick="filterByCategory('Winter'); return false;">Winter Collection</a></li>
+                    <li><a href="#" onclick="filterByCategory('Ethnic'); return false;">Ethnic Wear</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul>
+                    <li><a href="mailto:info@vynor.com">info@vynor.com</a></li>
+                    <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+                    <li><a href="https://instagram.com" target="_blank">Instagram</a></li>
+                    <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Vynor. All rights reserved. Made with ❤️ in India</p>
+        </div>
+    </footer>
+
+    <script>
+        // Product Data (55 Products)
+        const products = [
+            { id: '1', name: 'Classic White Shirt', brand: 'Peter England', description: 'Premium cotton formal white shirt', price: 1299, originalPrice: 1899, discount: 30, image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '2', name: 'Light Blue Formal Shirt', brand: 'Van Heusen', description: 'Wrinkle-free cotton blend shirt', price: 1399, originalPrice: 1999, discount: 30, image: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '3', name: 'Striped Formal Shirt', brand: 'Arrow', description: 'Classic striped pattern shirt', price: 1599, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '4', name: 'Pink Formal Shirt', brand: 'Louis Philippe', description: 'Premium pink formal shirt', price: 1799, originalPrice: 2499, discount: 30, image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '5', name: 'Navy Blue Shirt', brand: 'Raymond', description: 'Solid navy blue formal shirt', price: 1499, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '6', name: 'Grey Formal Shirt', brand: 'Park Avenue', description: 'Solid grey formal shirt', price: 1349, originalPrice: 1899, discount: 30, image: 'https://images.unsplash.com/photo-1603252109544-3e2b73e85e40?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '7', name: 'Checked Formal Shirt', brand: 'Blackberrys', description: 'Formal checked pattern shirt', price: 1699, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1594938291221-94f18cbb5660?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '8', name: 'Lavender Formal Shirt', brand: 'Peter England', description: 'Elegant lavender shirt', price: 1249, originalPrice: 1799, discount: 30, image: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '9', name: 'Black Formal Shirt', brand: 'Van Heusen', description: 'Premium black formal shirt', price: 1599, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1603252109360-909f55c2e4d5?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '10', name: 'Mint Green Shirt', brand: 'Arrow', description: 'Fresh mint green formal shirt', price: 1449, originalPrice: 2099, discount: 30, image: 'https://images.unsplash.com/photo-1602810316498-ab67cf68c8e1?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '11', name: 'Slim Fit Black Jeans', brand: 'Levis', description: 'Comfortable stretch denim jeans', price: 1699, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '12', name: 'Blue Denim Jeans', brand: 'Wrangler', description: 'Classic blue straight fit jeans', price: 1499, originalPrice: 2199, discount: 30, image: 'https://images.unsplash.com/photo-1548883354-d6f7d6c95c1f?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '13', name: 'Grey Chinos', brand: 'Arrow', description: 'Smart casual grey chinos', price: 1299, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '14', name: 'Khaki Cargo Pants', brand: 'Roadster', description: 'Multi-pocket cargo trousers', price: 1399, originalPrice: 1999, discount: 30, image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '15', name: 'Navy Blue Chinos', brand: 'US Polo', description: 'Classic navy blue chinos', price: 1199, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '16', name: 'Ripped Black Jeans', brand: 'Levis', description: 'Trendy ripped black jeans', price: 1899, originalPrice: 2699, discount: 30, image: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '17', name: 'Beige Chinos', brand: 'Allen Solly', description: 'Smart beige casual chinos', price: 1249, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '18', name: 'Light Blue Jeans', brand: 'Wrangler', description: 'Faded light blue denim jeans', price: 1599, originalPrice: 2299, discount: 30, image: 'https://images.unsplash.com/photo-1475178626620-a4d074967452?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '19', name: 'Olive Green Cargo', brand: 'Roadster', description: 'Military style olive cargo pants', price: 1449, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '20', name: 'Black Chinos', brand: 'Peter England', description: 'Classic black casual chinos', price: 1149, originalPrice: 1649, discount: 30, image: 'https://images.unsplash.com/photo-1624378440070-7b45c5c7b63a?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '21', name: 'Cotton Casual T-Shirt', brand: 'H&M', description: 'Comfortable round neck t-shirt', price: 599, originalPrice: 849, discount: 30, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '22', name: 'Polo T-Shirt', brand: 'US Polo', description: 'Classic polo neck t-shirt', price: 899, originalPrice: 1299, discount: 30, image: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '23', name: 'Graphic Print T-Shirt', brand: 'Jack & Jones', description: 'Trendy graphic print tee', price: 699, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '24', name: 'V-Neck T-Shirt', brand: 'Zara', description: 'Classic v-neck cotton tee', price: 549, originalPrice: 799, discount: 30, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '25', name: 'Striped T-Shirt', brand: 'H&M', description: 'Casual striped t-shirt', price: 649, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1622445275463-afa2ab738c34?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '26', name: 'Black Plain T-Shirt', brand: 'Roadster', description: 'Essential black round neck tee', price: 499, originalPrice: 749, discount: 30, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '27', name: 'White Cotton T-Shirt', brand: 'Levis', description: 'Classic white cotton tee', price: 599, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '28', name: 'Henley T-Shirt', brand: 'Jack & Jones', description: 'Stylish henley neck t-shirt', price: 749, originalPrice: 1099, discount: 30, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '29', name: 'Navy Blue Polo', brand: 'US Polo', description: 'Navy blue polo t-shirt', price: 999, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800&q=80', category: 'Casual', isFlashDeal: false },
+            { id: '30', name: 'Printed Round Neck Tee', brand: 'H&M', description: 'Trendy printed t-shirt', price: 699, originalPrice: 999, discount: 30, image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80', category: 'Casual', isFlashDeal: true },
+            { id: '31', name: 'Formal Blazer', brand: 'Raymond', description: 'Premium wool blend blazer', price: 3499, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '32', name: 'Navy Blue Blazer', brand: 'Blackberrys', description: 'Classic navy blue blazer', price: 3999, originalPrice: 5699, discount: 30, image: 'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '33', name: 'Grey Suit Blazer', brand: 'Van Heusen', description: 'Professional grey suit blazer', price: 4299, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1594938291221-94f18cbb5660?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '34', name: 'Formal Trousers Black', brand: 'Peter England', description: 'Classic black formal trousers', price: 1199, originalPrice: 1699, discount: 30, image: 'https://images.unsplash.com/photo-1624378440070-7b45c5c7b63a?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '35', name: 'Grey Formal Trousers', brand: 'Arrow', description: 'Smart grey formal pants', price: 1299, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '36', name: 'Brown Blazer', brand: 'Raymond', description: 'Elegant brown blazer', price: 3799, originalPrice: 5399, discount: 30, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '37', name: 'Waistcoat Beige', brand: 'Blackberrys', description: 'Formal beige waistcoat', price: 1599, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1594938328870-f8bb2f6ef9b1?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '38', name: 'Three Piece Suit', brand: 'Van Heusen', description: 'Complete three piece suit', price: 6999, originalPrice: 9999, discount: 30, image: 'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '39', name: 'Navy Formal Pants', brand: 'Louis Philippe', description: 'Navy blue formal trousers', price: 1499, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&q=80', category: 'Formal', isFlashDeal: false },
+            { id: '40', name: 'Pinstripe Blazer', brand: 'Raymond', description: 'Classic pinstripe blazer', price: 4499, originalPrice: 6399, discount: 30, image: 'https://images.unsplash.com/photo-1594938291221-94f18cbb5660?w=800&q=80', category: 'Formal', isFlashDeal: true },
+            { id: '41', name: 'Winter Jacket', brand: 'Zara', description: 'Warm hooded winter jacket', price: 2799, originalPrice: 3999, discount: 30, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80', category: 'Winter', isFlashDeal: true },
+            { id: '42', name: 'Leather Jacket Black', brand: 'Jack & Jones', description: 'Premium black leather jacket', price: 3499, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80', category: 'Winter', isFlashDeal: false },
+            { id: '43', name: 'Wool Sweater', brand: 'H&M', description: 'Cozy wool knit sweater', price: 1499, originalPrice: 2199, discount: 30, image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80', category: 'Winter', isFlashDeal: true },
+            { id: '44', name: 'Denim Jacket', brand: 'Levis', description: 'Classic blue denim jacket', price: 2199, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=800&q=80', category: 'Winter', isFlashDeal: false },
+            { id: '45', name: 'Hoodie Black', brand: 'Roadster', description: 'Comfortable black hoodie', price: 999, originalPrice: 1499, discount: 30, image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80', category: 'Winter', isFlashDeal: true },
+            { id: '46', name: 'Bomber Jacket', brand: 'Zara', description: 'Stylish bomber jacket', price: 2499, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80', category: 'Winter', isFlashDeal: false },
+            { id: '47', name: 'Puffer Jacket', brand: 'Jack & Jones', description: 'Insulated puffer jacket', price: 3299, originalPrice: 4699, discount: 30, image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=800&q=80', category: 'Winter', isFlashDeal: true },
+            { id: '48', name: 'Grey Cardigan', brand: 'H&M', description: 'Casual grey cardigan', price: 1299, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&q=80', category: 'Winter', isFlashDeal: false },
+            { id: '49', name: 'Navy Blue Hoodie', brand: 'US Polo', description: 'Navy blue zip hoodie', price: 1199, originalPrice: 1699, discount: 30, image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80', category: 'Winter', isFlashDeal: true },
+            { id: '50', name: 'Trench Coat', brand: 'Zara', description: 'Classic beige trench coat', price: 3999, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80', category: 'Winter', isFlashDeal: false },
+            { id: '51', name: 'Designer Kurta Set', brand: 'Manyavar', description: 'Traditional cotton kurta pajama', price: 2499, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1583391733981-5796bc4114c2?w=800&q=80', category: 'Ethnic', isFlashDeal: false },
+            { id: '52', name: 'Sherwani Gold', brand: 'Manyavar', description: 'Wedding special embroidered sherwani', price: 5999, originalPrice: 8499, discount: 30, image: 'https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&q=80', category: 'Ethnic', isFlashDeal: true },
+            { id: '53', name: 'Pathani Suit White', brand: 'Fabindia', description: 'Classic white pathani suit', price: 2199, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1583391733981-5796bc4114c2?w=800&q=80', category: 'Ethnic', isFlashDeal: false },
+            { id: '54', name: 'Nehru Jacket', brand: 'Manyavar', description: 'Traditional Nehru jacket', price: 1799, originalPrice: 2599, discount: 30, image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80', category: 'Ethnic', isFlashDeal: true },
+            { id: '55', name: 'Indo-Western Kurta', brand: 'Fabindia', description: 'Modern indo-western kurta', price: 2299, originalPrice: null, discount: 0, image: 'https://images.unsplash.com/photo-1583391733981-5796bc4114c2?w=800&q=80', category: 'Ethnic', isFlashDeal: false }
+        ];
+
+        const categories = [
+            { id: '1', name: 'Casual Wear', description: 'Everyday comfort and style', image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&q=80', slug: 'Casual' },
+            { id: '2', name: 'Formal Wear', description: 'Elegance for every occasion', image: 'https://images.unsplash.com/photo-1594938291221-94f18cbb5660?w=800&q=80', slug: 'Formal' },
+            { id: '3', name: 'Ethnic Wear', description: 'Traditional Indian fashion', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80', slug: 'Ethnic' },
+            { id: '4', name: 'Winter Collection', description: 'Stay warm in style', image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=800&q=80', slug: 'Winter' }
+        ];
+
+        const heroProducts = [
+            { id: '1', title: 'Classic White Shirt', subtitle: 'Premium cotton formal white shirt', price: 1299, originalPrice: 1899, savings: 600, image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=1200&q=80', isFlashDeal: true },
+            { id: '11', title: 'Slim Fit Black Jeans', subtitle: 'Levis comfort stretch denim', price: 1699, originalPrice: null, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1200&q=80', isFlashDeal: false },
+            { id: '41', title: 'Winter Jacket', subtitle: 'Warm hooded winter jacket', price: 2799, originalPrice: 3999, savings: 1200, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1200&q=80', isFlashDeal: true },
+            { id: '51', title: 'Designer Kurta Set', subtitle: 'Traditional cotton kurta pajama', price: 2499, originalPrice: null, image: 'https://images.unsplash.com/photo-1583391733981-5796bc4114c2?w=1200&q=80', isFlashDeal: false },
+            { id: '31', title: 'Formal Blazer', subtitle: 'Premium wool blend blazer', price: 3499, originalPrice: 4999, savings: 1500, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1200&q=80', isFlashDeal: true }
+        ];
+
+        // State
+        let currentSlide = 0;
+        let currentFilter = 'all';
+        let selectedProduct = null;
+        let selectedSize = '';
+        let quantity = 1;
+
+        // Initialize
+        function init() {
+            renderHeroSlider();
+            renderCategories();
+            renderProducts(products);
+            startSlider();
+            showFlashDeal();
+        }
+
+        // Hero Slider
+        function renderHeroSlider() {
+            const slider = document.getElementById('heroSlider');
+            slider.innerHTML = heroProducts.map((product, index) => `
+                <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}">
+                    <img src="${product.image}" alt="${product.title}">
+                    <div class="hero-content">
+                        ${product.isFlashDeal ? '<div class="badge">● Flash Deal: 30% OFF</div>' : '<div class="badge">FEATURED DROP</div>'}
+                        <h1>${product.title}</h1>
+                        <p>${product.subtitle}</p>
+                        <div class="price">₹${product.price}</div>
+                        ${product.originalPrice ? `
+                            <span class="original-price">₹${product.originalPrice}</span>
+                            <div class="savings">Save ₹${product.savings}</div>
+                        ` : ''}
+                        <button class="btn-primary" onclick="openProduct('${product.id}')">
+                            Buy Now →
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            slider.innerHTML += `
+                <button class="slider-arrow prev" onclick="changeSlide(-1)">‹</button>
+                <button class="slider-arrow next" onclick="changeSlide(1)">›</button>
+                <div class="slider-nav">
+                    ${heroProducts.map((_, i) => `<div class="slider-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`).join('')}
+                </div>
+            `;
+        }
+
+        function changeSlide(direction) {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            currentSlide = (currentSlide + direction + heroProducts.length) % heroProducts.length;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            currentSlide = index;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function startSlider() {
+            setInterval(() => {
+                changeSlide(1);
+            }, 5000);
+        }
+
+        // Categories
+        function renderCategories() {
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = categories.map(cat => `
+                <div class="category-card" onclick="filterByCategory('${cat.slug}')">
+                    <img src="${cat.image}" alt="${cat.name}">
+                    <div class="category-overlay">
+                        <h3>${cat.name}</h3>
+                        <p>${cat.description}</p>
+                        <a href="#" class="category-btn" onclick="return false;">Shop Now →</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Products
+        function renderProducts(productsToRender) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = productsToRender.map(product => `
+                <div class="product-card" onclick="openProduct('${product.id}')">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
+                        ${product.discount > 0 ? `<div class="discount-badge">-${product.discount}%</div>` : ''}
+                        ${product.isFlashDeal ? '<div class="flash-deal-badge">FLASH DEAL</div>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">${product.brand}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-price">
+                            <span class="current-price">₹${product.price}</span>
+                            ${product.originalPrice ? `
+                                <span class="original-price">₹${product.originalPrice}</span>
+                            ` : ''}
+                        </div>
+                        ${product.discount > 0 ? `<div class="discount-text">(${product.discount}% OFF)</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByCategory(category) {
+            currentFilter = category;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter products
+            const filtered = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+            
+            renderProducts(filtered);
+            
+            // Scroll to products
+            document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Product Detail Modal
+        function openProduct(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            if (!selectedProduct) return;
+            
+            selectedSize = '';
+            quantity = 1;
+            
+            const modal = document.getElementById('productModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = `
+                <div class="breadcrumb">
+                    <a href="#" onclick="showHome(); closeProductModal(); return false;">Home</a> / 
+                    <a href="#" onclick="closeProductModal(); return false;">Products</a> / 
+                    ${selectedProduct.name}
+                </div>
+                
+                <div class="product-detail-grid">
+                    <div class="product-images">
+                        <div class="main-image">
+                            <img src="${selectedProduct.image}" alt="${selectedProduct.name}">
+                            ${selectedProduct.discount > 0 ? `<div class="discount-badge">-${selectedProduct.discount}% OFF</div>` : ''}
+                        </div>
+                        <div class="thumbnail-grid">
+                            ${[1,2,3,4].map(i => `
+                                <div class="thumbnail">
+                                    <img src="${selectedProduct.image}" alt="${selectedProduct.name} view ${i}">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="product-details">
+                        <div class="detail-brand">${selectedProduct.brand}</div>
+                        <h1 class="detail-name">${selectedProduct.name}</h1>
+                        <p class="detail-description">${selectedProduct.description}</p>
+                        
+                        <div class="detail-price">
+                            <span class="detail-current-price">₹${selectedProduct.price}</span>
+                            ${selectedProduct.originalPrice ? `
+                                <span class="detail-original-price">₹${selectedProduct.originalPrice}</span>
+                                <span class="detail-discount">(${selectedProduct.discount}% OFF)</span>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="size-selector">
+                            <div class="size-header">
+                                <label>Select Size</label>
+                                <span class="size-guide">Size Guide</span>
+                            </div>
+                            <div class="size-options">
+                                ${['S', 'M', 'L', 'XL', 'XXL'].map(size => `
+                                    <button class="size-btn" onclick="selectSize('${size}')">${size}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <label>Quantity</label>
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                                <div class="qty-display" id="qtyDisplay">1</div>
+                                <button class="qty-btn" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="whatsapp-btn" onclick="orderOnWhatsApp()">
+                                <svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                                Order on WhatsApp
+                            </button>
+                            <div class="secondary-actions">
+                                <button class="secondary-btn">
+                                    ♡ Wishlist
+                                </button>
+                                <button class="secondary-btn">
+                                    ⤴ Share
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <div class="icon">🚚</div>
+                                <div>
+                                    <h4>Free Delivery</h4>
+                                    <p>On all prepaid orders</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon">🔄</div>
+                                <div>
+                                    <h4>Easy Returns</h4>
+                                    <p>3 days return policy</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon">🛡️</div>
+                                <div>
+                                    <h4>100% Authentic</h4>
+                                    <p>Genuine products guaranteed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-info-section">
+                    <div class="info-section">
+                        <h3>Description</h3>
+                        <p>${selectedProduct.description}. This premium quality ${selectedProduct.name.toLowerCase()} from ${selectedProduct.brand} is designed to provide maximum comfort and style. Perfect for ${selectedProduct.category.toLowerCase()} occasions, this piece combines modern design with traditional craftsmanship.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Key Features</h3>
+                        <ul>
+                            <li><span class="check-icon">✓</span> Premium quality fabric for long-lasting durability</li>
+                            <li><span class="check-icon">✓</span> Perfect fit with comfortable wear</li>
+                            <li><span class="check-icon">✓</span> Easy care and machine washable</li>
+                            <li><span class="check-icon">✓</span> Available in sizes: S, M, L, XL, XXL</li>
+                            <li><span class="check-icon">✓</span> Brand: ${selectedProduct.brand}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Material & Care</h3>
+                        <div class="material-care">
+                            <div class="care-section">
+                                <h4>Material</h4>
+                                <p>100% Premium Cotton / Cotton Blend</p>
+                            </div>
+                            <div class="care-section">
+                                <h4>Care Instructions</h4>
+                                <ul>
+                                    <li>• Machine wash cold</li>
+                                    <li>• Do not bleach</li>
+                                    <li>• Tumble dry low</li>
+                                    <li>• Iron at medium temperature</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function selectSize(size) {
+            selectedSize = size;
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.textContent === size) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        function changeQuantity(delta) {
+            quantity = Math.max(1, quantity + delta);
+            document.getElementById('qtyDisplay').textContent = quantity;
+        }
+
+        function orderOnWhatsApp() {
+            if (!selectedSize) {
+                alert('Please select a size first');
+                return;
+            }
+            
+            const message = `Hi! I want to order:\n\n*${selectedProduct.name}*\nBrand: ${selectedProduct.brand}\nSize: ${selectedSize}\nQuantity: ${quantity}\nPrice: ₹${selectedProduct.price}\n\nPlease confirm availability.`;
+            const whatsappNumber = '919876543210'; // Replace with actual number
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Flash Deal Popup
+        function showFlashDeal() {
+            setTimeout(() => {
+                document.getElementById('flashDealPopup').style.display = 'block';
+            }, 3000);
+        }
+
+        function closeFlashDeal() {
+            document.getElementById('flashDealPopup').style.display = 'none';
+        }
+
+        function scrollToProducts() {
+            closeFlashDeal();
+            document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Close modal on outside click
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProductModal();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>  
