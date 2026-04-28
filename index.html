@@ -106,6 +106,9 @@
       ]
     }
     </script>
+    <!-- Razorpay Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -2145,10 +2148,10 @@
                             <button id="addToCartBtn" class="add-to-cart-btn" onclick="addToCart()" aria-label="Add to Cart">
                                 🛒 Add to Cart
                             </button>
-                            <a href="https://rzp.io/l/yourlink" target="_blank" rel="noopener noreferrer" class="razorpay-btn" aria-label="Buy Now via Razorpay">
+                            <button class="razorpay-btn" onclick="buyNowRazorpay()" aria-label="Buy Now via Razorpay">
                                 <svg style="width:20px;height:20px;flex-shrink:0;" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z"/><path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clip-rule="evenodd"/></svg>
                                 Buy Now
-                            </a>
+                            </button>
                             <div class="secondary-actions">
                                 <button id="modalWishlistBtn" class="secondary-btn" onclick="toggleModalWishlist()" aria-label="Add to Wishlist">♡ Wishlist</button>
                                 <button class="secondary-btn" onclick="shareProduct()" aria-label="Share">⤴ Share</button>
@@ -2238,7 +2241,117 @@
             document.getElementById('qtyDisplay').textContent = quantity;
         }
 
-        // Razorpay payment links are used for all checkout flows
+        // ===================== RAZORPAY CONFIG =====================
+        // 🔑 Replace with your actual Razorpay Key ID from dashboard.razorpay.com
+        const RAZORPAY_KEY = 'YOUR_KEY_ID';
+
+        // 🔗 Optional: Replace with your Google Sheet Apps Script Web App URL
+        const WEBHOOK_URL = 'YOUR_WEBHOOK_URL';
+
+        // ─── Single Product Buy Now (from product modal) ───────────
+        function buyNowRazorpay() {
+            if (!selectedProduct) return;
+            if (!selectedSize) { alert('Please select a size first'); return; }
+
+            const productName = selectedProduct.name;
+            const brand       = selectedProduct.brand;
+            const price       = selectedProduct.price;
+            const totalAmount = price * quantity;
+
+            const options = {
+                key: RAZORPAY_KEY,
+                amount: totalAmount * 100,   // Razorpay uses paise
+                currency: 'INR',
+                name: 'Vynox Menswear',
+                description: `${productName} | Size: ${selectedSize} | Qty: ${quantity}`,
+                image: selectedProduct.image,
+                prefill: { name: '', email: '', contact: '' },
+                notes: {
+                    product_name: productName,
+                    brand:        brand,
+                    size:         selectedSize,
+                    quantity:     String(quantity),
+                    unit_price:   String(price)
+                },
+                theme: { color: '#000000' },
+                handler: function(response) {
+                    alert(`✅ Payment successful!\nPayment ID: ${response.razorpay_payment_id}`);
+                    sendToSheet({
+                        product:    productName,
+                        brand:      brand,
+                        size:       selectedSize,
+                        quantity:   quantity,
+                        amount:     totalAmount,
+                        payment_id: response.razorpay_payment_id,
+                        type:       'buy_now'
+                    });
+                    closeProductModal();
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(response) {
+                alert('Payment failed. Please try again.\n' + response.error.description);
+            });
+            rzp.open();
+        }
+
+        // ─── Cart Checkout (from cart drawer) ─────────────────────
+        function checkoutRazorpay() {
+            if (cart.length === 0) return;
+            const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+            const description = cart.map(i => `${i.name}(${i.size})x${i.qty}`).join(', ');
+
+            const options = {
+                key: RAZORPAY_KEY,
+                amount: total * 100,
+                currency: 'INR',
+                name: 'Vynox Menswear',
+                description: description,
+                prefill: { name: '', email: '', contact: '' },
+                notes: {
+                    order_summary: description.substring(0, 200),
+                    item_count:    String(cart.length)
+                },
+                theme: { color: '#000000' },
+                handler: function(response) {
+                    alert(`✅ Payment successful!\nPayment ID: ${response.razorpay_payment_id}`);
+                    sendToSheet({
+                        product:    description,
+                        quantity:   cart.reduce((s, i) => s + i.qty, 0),
+                        amount:     total,
+                        payment_id: response.razorpay_payment_id,
+                        type:       'cart_checkout',
+                        items:      JSON.stringify(cart.map(i => ({
+                            name: i.name, brand: i.brand, size: i.size, qty: i.qty, price: i.price
+                        })))
+                    });
+                    // Clear cart on success
+                    cart.length = 0;
+                    saveCart();
+                    updateCartBadge();
+                    closeCartDrawer();
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(response) {
+                alert('Payment failed. Please try again.\n' + response.error.description);
+            });
+            rzp.open();
+        }
+
+        // ─── Send order data to Google Sheet via Apps Script ──────
+        function sendToSheet(data) {
+            if (!WEBHOOK_URL || WEBHOOK_URL === 'YOUR_WEBHOOK_URL') return;
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...data,
+                    timestamp: new Date().toISOString(),
+                    store:     'Vynox Menswear'
+                })
+            }).catch(err => console.warn('Sheet webhook error:', err));
+        }
 
         function toggleModalWishlist() {
             if (!selectedProduct) return;
@@ -2439,8 +2552,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Cart checkout now handled via Razorpay link in the cart drawer
-
         // ===================== WISHLIST DRAWER =====================
         function openWishlistDrawer() {
             renderWishlistDrawer();
@@ -2536,10 +2647,10 @@
                 <span id="cartTotal">₹0</span>
             </div>
             <p class="cart-shipping-note">🚚 Free shipping on prepaid orders</p>
-            <a href="https://rzp.io/l/yourlink" target="_blank" rel="noopener noreferrer" class="razorpay-btn" style="width:100%;justify-content:center;">
+            <button onclick="checkoutRazorpay()" class="razorpay-btn" style="width:100%;justify-content:center;border:none;cursor:pointer;">
                 <svg style="width:20px;height:20px;flex-shrink:0;" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z"/><path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clip-rule="evenodd"/></svg>
                 Proceed to Pay
-            </a>
+            </button>
         </div>
     </div>
 
